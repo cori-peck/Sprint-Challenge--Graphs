@@ -21,22 +21,21 @@ player = Player("Name", world.startingRoom)
 
 
 # FILL THIS IN
-traversalPath = []
+traversalPath = []  #moves made
 visited = {}
-reverse = []
+reverse = []  #path back
 goBack = {'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
 
 ## random unexplored direction from the player's current room
 visited[0] = player.currentRoom.getExits()
 
-## travels and logs that direction, then loops
-while len(visited) < len(roomGraph) - 1:
+## travels and logs that direction
+while len(list(visited)) < 499:
     if player.currentRoom.id not in visited:
         visited[player.currentRoom.id] = player.currentRoom.getExits()
-        lastRoom = reverse[-1]
-        visited[player.currentRoom.id].remove(lastRoom)
-
-    while len(visited[player.currentRoom.id]) < 1:
+        visited[player.currentRoom.id].remove(reverse[-1])
+    # loops back to find an untraveled room
+    while len(visited[player.currentRoom.id]) is 0 and len(visited) > 0:
         reverse_path = reverse.pop()
         traversalPath.append(reverse_path)
         player.travel(reverse_path)
@@ -46,8 +45,8 @@ while len(visited) < len(roomGraph) - 1:
     traversalPath.append(exit_path)
     reverse.append(goBack[exit_path])
     player.travel(exit_path)
-    if len(roomGraph) - len(visited) == 1:
-        visited[player.currentRoom.id] = player.currentRoom.getExits()
+    #if len(roomGraph) - len(visited) == 1:
+        #visited[player.currentRoom.id] = player.currentRoom.getExits()
 
 
 # TRAVERSAL TEST
