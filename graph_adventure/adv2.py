@@ -88,31 +88,38 @@ def bfs(self, startingRoom, next_room):
 traversalPath = []
 visited = {}
 qq = Queue()
+route = {}
 #goBack = {'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
 
 qq.enqueue(player.currentRoom)
 
 while qq.size() > 0:
     path = qq.dequeue()
-    if path.id not in visited:
-        visited.update({path.id:{}})
-        moves = {}
-        for move_direction in path.getExits():
-            moves[move_direction] = '?'
-            player.travel(move_direction)
-            qq.enqueue(player.currentRoom)
-            print(player.currentRoom.id)
-            if(move_direction == 'n'):
-                player.travel('s')
-            elif(move_direction == 's'):
-                player.travel('n')
-            elif(move_direction == 'e'):
-                player.travel('w')
-            elif(move_direction == 'w'):
-                player.travel('e')
-        visited[path.id] = moves
+    currentLocation = path.id
+    if currentLocation not in route:
+        route[currentLocation] = {}
+        for exit in path.getExits():
+            route[currentLocation][exit] = '?'
 
-print(visited)
+    if route[currentLocation]['n'] == '?':
+        move_direction = 'n'
+        traversalPath.append(move_direction)
+        player.travel(move_direction)
+    elif route[currentLocation]['s'] == '?':
+        move_direction = 's'
+        traversalPath.append(move_direction)
+        player.travel(move_direction)
+    elif route[currentLocation]['e'] == '?':
+        move_direction = 'e'
+        traversalPath.append(move_direction)
+        player.travel(move_direction)
+    elif route[currentLocation]['w'] == '?':
+        move_direction = 'w'
+        traversalPath.append(move_direction)
+        player.travel(move_direction)
+
+print(route)
+print(len(traversalPath))
 
 
 
