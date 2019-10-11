@@ -48,41 +48,69 @@ player = Player("Name", world.startingRoom)
 
 
 # FILL THIS IN
-def dft(startingRoom, graphs):
-    stak = Stack()
+#def dft(startingRoom, graphs):
+    #stak = Stack()
+    #visited = set()
+
+    #stak.push([startingRoom])
+    #while stak.size > 0:
+        #path = stak.pop()
+        #room = path[-1]
+        #if room not in visited:
+            #for next_room in graphs:
+                #path = list(room)
+                #new_path = path.copy()
+                #new_path.append(next_room)
+                #stak.push(new_path)
+
+        #visited.add(room)
+
+def bfs(self, startingRoom, next_room):
+    qq = Queue()
     visited = set()
 
-    stak.push([startingRoom])
-    while stak.size > 0:
-        path = stak.pop()
+    qq.enqueue([startingRoom])
+    while qq.size() > 0:
+        path = qq.dequeue()
         room = path[-1]
-        if room not in visited:
-            for next_room in graphs:
-                path = list(room)
-                new_path = path.copy()
-                new_path.append(next_room)
-                stak.push(new_path)
 
-        visited.add(room)
+        if room not in visited:
+            for neighbor in self.room_list[room]:
+                route = list(path)
+                route.append(neighbor)
+                qq.enqueue(route)
+                if neighbor == next_room:
+                    return route
+
+            visited.add(room)
 
 
 traversalPath = []
 visited = {}
 qq = Queue()
+#goBack = {'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
 
-qq.enqueue(player)
+qq.enqueue(player.currentRoom)
 
 while qq.size() > 0:
     path = qq.dequeue()
-    if path.currentRoom.id not in visited:
-        visited.update({path.currentRoom.id:{}})
+    if path.id not in visited:
+        visited.update({path.id:{}})
         moves = {}
-        for move_direction in path.currentRoom.getExits():
+        for move_direction in path.getExits():
             moves[move_direction] = '?'
-            path.travel(move_direction)
-            print(path.currentRoom.id)
-            qq.enqueue(path)
-        visited.update({path.currentRoom.id: moves})
+            player.travel(move_direction)
+            qq.enqueue(player.currentRoom)
+            print(player.currentRoom.id)
+            if(move_direction == 'n'):
+                player.travel('s')
+            elif(move_direction == 's'):
+                player.travel('n')
+            elif(move_direction == 'e'):
+                player.travel('w')
+            elif(move_direction == 'w'):
+                player.travel('e')
+        visited[path.id] = moves
 
 print(visited)
 
